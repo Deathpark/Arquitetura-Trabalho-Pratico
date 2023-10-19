@@ -57,3 +57,33 @@ Tanto motoristas parceiros quanto usuários podem compartilhar a viagem em tempo
 - https://investor.uber.com/home/default.aspx
 - https://www.uber.com/en-BR/blog/engineering
 
+##### Fontes: 
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/8d2d5859-0aca-488c-936d-671b5c22fc76/a9f9c34f-bb0e-4d44-91ca-09dbcb476855/Untitled.png)
+
+Estabelecer conexão entre motorista e passageiro parece uma tarefa simples, mas não é.
+
+Até 2014, o Uber utilizava de uma estrutura monolítica mas com sua expansão, foi necessário transicionar para uma arquitetura orientada a serviços. Além da necessidade de uma aplicação mais escalável, essa mudança para a arquitetura de microsserviços foi impulsionada pela necessidade de um gerenciamento mais específico de viagens, dados do passageiro e do motorista, além das cobranças, pagamentos e disparo de notificações.
+
+A arquitetura da Uber se divide em dois sistemas que se comunicam com um terceiro que faz uma ponte entre os dois. Os dois primeiros são o **supply** (para motoristas) e o **demand** (para passageiros), e ambos se comunicam com o ****dispatch (DISCO). O dispatch é responsável pelo mapa e pela localização, utilizando-se do Google S2 Geometry Library para buscar dados de latitude e longitude de forma tridimensional ao invés de planificada, como se fosse um atlas. Esse recurso possibilita o cálculo do raio e dispara a notificação para os motoristas que se encontram dentro da localização especificada e dessa forma é possível entre o motorista e o passageiro.
+
+A cada 4 segundos, é enviada a localização dos motoristas para a REST API do Kafka, que envia essa informação de localização para o dispatch e ambas as camadas de supply e demand tem acesso à essas localizações.
+
+Quando o usuário vai pedir um Uber, essa requisição passa primeiro pelo WebSocket. O WebSocket faz essa requisição para o demand, que se comunica com o supply com as informações da viagem (tipo de corrida, quantas corridas são necessárias, localização). O serviço de supply, então, é responsável por localizar os motoristas que estão mais próximos contanto também com o cálculo do ETA (tempo estimado de chegada) e depois que esse valor é calculado, o supply notifica aos motoristas se eles aceitam determinada corrida.
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/8d2d5859-0aca-488c-936d-671b5c22fc76/7c3be887-69d5-4767-8c1e-095fe70ffc99/Untitled.png)
+
+Na imagem acima, podemos ver que existem vários servidores que guardam as geolocalizações. Se alguma outra localização for adicionada, o próprio sistema já sabe dos servidores disponíveis e distribui as células de localização. Se um servidor for removido, as células são redistribuídas entre os servidores existentes.
+
+As bases de dados são NoSQL, sendo elas horizontalmente escaláveis e possuem alta disponibilidade visto que a localização dos motoristas é enviada a cada 4 segundos para mudança de estado.
+
+Quanto à questão da segurança, a Uber lida com dados em tempo real, ou seja, são necessários sistemas internos e uma equipe de UX e ciência de dados para monitorar fraudes e eventos indesejados.
+
+Referências:
+
+https://www.infoq.com/br/presentations/a-arquitetura-de-sistemas-de-tempo-real-da-uber/
+
+https://www.geeksforgeeks.org/system-design-of-uber-app-uber-system-architecture/
+
+https://medium.com/nerd-for-tech/uber-architecture-and-system-design-e8ac26690dfc
+
