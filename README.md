@@ -9,7 +9,8 @@ Trabalho realizado para a disciplina Arquitetura de Software na instituição Po
 # Sistema Escolhido: Uber
 
 ## Motivação
-
+A motivação para realizar o trabalho baseado na Uber é que o aplicativo é usado diariamente por milhões de pessoas e não sabemos muito sobre sua arquitetura e nem como funciona o seu sistema de conexão com seus usuários.
+Dito isso, a realização do trabalho ajuda a ter clareza sobre como é a arquitetura da uber e como funciona seu sistema
 
 ## Uber 
 
@@ -52,12 +53,6 @@ Motoristas parceiros e usuários podem utilizar o próprio aplicativo para grava
 Tanto motoristas parceiros quanto usuários podem compartilhar a viagem em tempo real com quem desejarem. A ferramenta é acionada por meio da Central de Segurança, identificada por um escudo azul sobre o mapa da viagem no aplicativo.
 
 
-##### Fontes: 
-- Uber-2023-Environmental-Social-and-Governance-Report 
-- https://investor.uber.com/home/default.aspx
-- https://www.uber.com/en-BR/blog/engineering
-
-##### Fontes: 
 ![foto2](https://github.com/Deathpark/Arquitetura-Trabalho-Pratico/assets/41022890/4a9a5349-e7a0-4ceb-893e-20740540d514)
 
 
@@ -81,11 +76,11 @@ As bases de dados são NoSQL, sendo elas horizontalmente escaláveis e possuem a
 
 Quanto à questão da segurança, a Uber lida com dados em tempo real, ou seja, são necessários sistemas internos e uma equipe de UX e ciência de dados para monitorar fraudes e eventos indesejados.
 
-Referências:
-
-https://www.infoq.com/br/presentations/a-arquitetura-de-sistemas-de-tempo-real-da-uber/
-
-https://www.geeksforgeeks.org/system-design-of-uber-app-uber-system-architecture/
-
-https://medium.com/nerd-for-tech/uber-architecture-and-system-design-e8ac26690dfc
+##### Fontes: 
+- Uber-2023-Environmental-Social-and-Governance-Report 
+- https://investor.uber.com/home/default.aspx
+- https://www.uber.com/en-BR/blog/engineering
+- https://www.infoq.com/br/presentations/a-arquitetura-de-sistemas-de-tempo-real-da-uber/
+- https://www.geeksforgeeks.org/system-design-of-uber-app-uber-system-architecture/
+- https://medium.com/nerd-for-tech/uber-architecture-and-system-design-e8ac26690dfc
 
