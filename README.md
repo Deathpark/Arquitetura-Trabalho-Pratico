@@ -59,7 +59,7 @@ Tanto motoristas parceiros quanto usuários podem compartilhar a viagem em tempo
 
 ##### Fontes: 
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/8d2d5859-0aca-488c-936d-671b5c22fc76/a9f9c34f-bb0e-4d44-91ca-09dbcb476855/Untitled.png)
+[![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/8d2d5859-0aca-488c-936d-671b5c22fc76/a9f9c34f-bb0e-4d44-91ca-09dbcb476855/Untitled.png)](https://miro.medium.com/v2/resize:fit:640/0*7ielaz1d7SVGCCRs)
 
 Estabelecer conexão entre motorista e passageiro parece uma tarefa simples, mas não é.
 
@@ -71,7 +71,7 @@ A cada 4 segundos, é enviada a localização dos motoristas para a REST API do 
 
 Quando o usuário vai pedir um Uber, essa requisição passa primeiro pelo WebSocket. O WebSocket faz essa requisição para o demand, que se comunica com o supply com as informações da viagem (tipo de corrida, quantas corridas são necessárias, localização). O serviço de supply, então, é responsável por localizar os motoristas que estão mais próximos contanto também com o cálculo do ETA (tempo estimado de chegada) e depois que esse valor é calculado, o supply notifica aos motoristas se eles aceitam determinada corrida.
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/8d2d5859-0aca-488c-936d-671b5c22fc76/7c3be887-69d5-4767-8c1e-095fe70ffc99/Untitled.png)
+[![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/8d2d5859-0aca-488c-936d-671b5c22fc76/7c3be887-69d5-4767-8c1e-095fe70ffc99/Untitled.png)](https://media.geeksforgeeks.org/wp-content/cdn-uploads/20201120210648/Uber-System-Design-High-Level-Architecture.png)
 
 Na imagem acima, podemos ver que existem vários servidores que guardam as geolocalizações. Se alguma outra localização for adicionada, o próprio sistema já sabe dos servidores disponíveis e distribui as células de localização. Se um servidor for removido, as células são redistribuídas entre os servidores existentes.
 
