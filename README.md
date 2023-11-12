@@ -81,6 +81,33 @@ Para análises, o Uber coleta dados de localização de motoristas e passageiros
 
 Para enfrentar falhas totais de datacenter, o Uber não replica dados para o datacenter de backup, mas usa os aplicativos dos telefones dos motoristas como fonte de dados de viagem. Os aplicativos dos motoristas mantêm um registro das informações relevantes e podem fornecer esses dados ao datacenter de backup em caso de falha. Quanto à questão da segurança, a Uber lida com dados em tempo real, ou seja, são necessários sistemas internos e uma equipe de UX e ciência de dados para monitorar fraudes e eventos indesejados.
 
+# Alguns requisitos importantes para a Uber
+
+- Confiabilidade de 99,99% do tempo de experiência do motorista;
+- Disponibilidade de 99,99% do tempo;
+
+
+## Principal motivo para mudança de arquitetura
+- Plataforma de onde centenas de times de programas e milhares de engenheiros possam rapidamente construir funcionalidades de qualidade e inovar no aplicativo do motorista sem comprometer a experiência principal
+- Compatibilidade entre plataformas
+- Testes melhores
+
+# O que foi alterado?
+
+Na arquitetura relacionada ao aplicativo de motoristas da uber, em 2016 foi realizado uma grande alteração em sua arquitetura. Essa mudança foi realizada para que ambos os sistemas operacionais (Android e IOS) pudessem usufruir dos melhores padrões e práticas em ambas as plataformas, sem divergirem muito uma da outra. Desta forma, os engenheiros que trabalham em uma plataforma podem ajudar a solucionar problemas da outra plataforma mais facilmente.
+São os pontos em comum que as plataformas tem em conjunto:
+- Arquitetura principal;
+- Nomes das classes;
+- Relacionamentos de heranças entre as unidades lógicas de negócio;
+- Como a lógica de negócios é dividida;
+- Pontos de plugin (nomes, existência, estrutura etc.);
+- Cadeias de programação reativas;
+- Componentes de plataforma unificados.
+
+O modelo arquitetural inicialmente usado pela Uber era o MVC (Model, View, Controller). Entretanto, para atingir os objetivos supracitados, era necessário uma mudança arquitetural em ambas plataformas. Desta maneira, foi definido que o modelo arquitetural que seria utilizado seria o Riblets, que foi definido após a análise de vários modelos arquiteturais diferentes, onde o VIPER se destacou, e posteriormente virou o Riblets.
+
+![riblets](https://github.com/Deathpark/Arquitetura-Trabalho-Pratico/assets/41022890/60d976be-ede7-46db-a720-e8322b65fd8f)
+
 ##### Fontes: 
 - Uber-2023-Environmental-Social-and-Governance-Report 
 - https://investor.uber.com/home/default.aspx
@@ -88,4 +115,5 @@ Para enfrentar falhas totais de datacenter, o Uber não replica dados para o dat
 - https://www.infoq.com/br/presentations/a-arquitetura-de-sistemas-de-tempo-real-da-uber/
 - https://www.geeksforgeeks.org/system-design-of-uber-app-uber-system-architecture/
 - https://medium.com/nerd-for-tech/uber-architecture-and-system-design-e8ac26690dfc
+- https://imasters.com.br/android/engenharia-da-arquitetura-por-tras-do-novo-aplicativo-do-motorista-uber
 
