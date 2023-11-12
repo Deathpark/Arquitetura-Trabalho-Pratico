@@ -52,29 +52,32 @@ Motoristas parceiros e usuários podem utilizar o próprio aplicativo para grava
 ##### U-Acompanha: compartilhamento de viagem
 Tanto motoristas parceiros quanto usuários podem compartilhar a viagem em tempo real com quem desejarem. A ferramenta é acionada por meio da Central de Segurança, identificada por um escudo azul sobre o mapa da viagem no aplicativo.
 
+#### Estrutura do sistema
 
 ![foto2](https://github.com/Deathpark/Arquitetura-Trabalho-Pratico/assets/41022890/4a9a5349-e7a0-4ceb-893e-20740540d514)
 
-
-
-Estabelecer conexão entre motorista e passageiro parece uma tarefa simples, mas não é.
+O Uber começou com uma arquitetura monolítica simples, que consistia em serviços de backend, frontend e banco de dados, inicialmente usando Python para os servidores de aplicativos. Eles também usaram um framework baseado em Python para tarefas assíncronas.
 
 Até 2014, o Uber utilizava de uma estrutura monolítica mas com sua expansão, foi necessário transicionar para uma arquitetura orientada a serviços. Além da necessidade de uma aplicação mais escalável, essa mudança para a arquitetura de microsserviços foi impulsionada pela necessidade de um gerenciamento mais específico de viagens, dados do passageiro e do motorista, além das cobranças, pagamentos e disparo de notificações.
 
-A arquitetura da Uber se divide em dois sistemas que se comunicam com um terceiro que faz uma ponte entre os dois. Os dois primeiros são o **supply** (para motoristas) e o **demand** (para passageiros), e ambos se comunicam com o ****dispatch (DISCO). O dispatch é responsável pelo mapa e pela localização, utilizando-se do Google S2 Geometry Library para buscar dados de latitude e longitude de forma tridimensional ao invés de planificada, como se fosse um atlas. Esse recurso possibilita o cálculo do raio e dispara a notificação para os motoristas que se encontram dentro da localização especificada e dessa forma é possível entre o motorista e o passageiro.
+O Google S2 Geometry Library é usada para gerenciar dados de localização e mapas. Ela transforma dados de mapas esféricos em células pequenas e exclusivas, facilitando o armazenamento e a distribuição de dados em um ambiente distribuído. Além disso, a biblioteca permite calcular a cobertura de células para determinadas áreas, o que é essencial para encontrar motoristas disponíveis em um determinado raio.
 
-A cada 4 segundos, é enviada a localização dos motoristas para a REST API do Kafka, que envia essa informação de localização para o dispatch e ambas as camadas de supply e demand tem acesso à essas localizações.
+A arquitetura da Uber se divide em dois sistemas que se comunicam com um terceiro que faz uma ponte entre os dois. Os dois primeiros são o **supply** (para motoristas) e o **demand** (para passageiros), e ambos se comunicam com o ****dispatch (DISCO). O dispatch é responsável pelo mapa e pela localização, utilizando-se do Google S2 Geometry Library para buscar dados de latitude e longitude de forma tridimensional ao invés de planificada, como se fosse um atlas. Esse recurso possibilita o cálculo do raio e dispara a notificação para os motoristas que se encontram dentro da localização especificada e dessa forma é possível entre o motorista e o passageiro. A cada 4 segundos, é enviada a localização dos motoristas para a REST API do Kafka, que envia essa informação de localização para o dispatch e ambas as camadas de supply e demand tem acesso à essas localizações.
 
 Quando o usuário vai pedir um Uber, essa requisição passa primeiro pelo WebSocket. O WebSocket faz essa requisição para o demand, que se comunica com o supply com as informações da viagem (tipo de corrida, quantas corridas são necessárias, localização). O serviço de supply, então, é responsável por localizar os motoristas que estão mais próximos contanto também com o cálculo do ETA (tempo estimado de chegada) e depois que esse valor é calculado, o supply notifica aos motoristas se eles aceitam determinada corrida.
+
+O sistema do Uber é dimensionado usando o Ring Pop, que usa a técnica de hash consistente para distribuir o trabalho entre os servidores e a chamada RPC (Remote Procedure Call) para comunicação entre servidores. O protocolo SWIM/Gossip é usado para que os servidores saibam das responsabilidades uns dos outros e possam adicionar ou remover servidores do sistema.
 
 ![foto1](https://github.com/Deathpark/Arquitetura-Trabalho-Pratico/assets/41022890/095e18e7-f9c4-49a6-b878-05e970b78dc1)
 
 
 Na imagem acima, podemos ver que existem vários servidores que guardam as geolocalizações. Se alguma outra localização for adicionada, o próprio sistema já sabe dos servidores disponíveis e distribui as células de localização. Se um servidor for removido, as células são redistribuídas entre os servidores existentes.
 
-As bases de dados são NoSQL, sendo elas horizontalmente escaláveis e possuem alta disponibilidade visto que a localização dos motoristas é enviada a cada 4 segundos para mudança de estado.
+Quanto aos bancos de dados, o Uber começou com sistemas de gerenciamento de banco de dados relacional (RDBMS) para dados de perfil e GPS, mas mudou para bancos de dados NoSQL que são horizontais, escaláveis, oferecem alta disponibilidade de leitura e gravação, e não têm tempo de inatividade.
 
-Quanto à questão da segurança, a Uber lida com dados em tempo real, ou seja, são necessários sistemas internos e uma equipe de UX e ciência de dados para monitorar fraudes e eventos indesejados.
+Para análises, o Uber coleta dados de localização de motoristas e passageiros em bancos de dados NoSQL ou RDBMS e usa ferramentas como Hadoop para análises em tempo real e análises históricas. Eles também se concentram na detecção de fraudes, como fraudes de pagamento, abuso de incentivos e contas comprometidas.
+
+Para enfrentar falhas totais de datacenter, o Uber não replica dados para o datacenter de backup, mas usa os aplicativos dos telefones dos motoristas como fonte de dados de viagem. Os aplicativos dos motoristas mantêm um registro das informações relevantes e podem fornecer esses dados ao datacenter de backup em caso de falha. Quanto à questão da segurança, a Uber lida com dados em tempo real, ou seja, são necessários sistemas internos e uma equipe de UX e ciência de dados para monitorar fraudes e eventos indesejados.
 
 ##### Fontes: 
 - Uber-2023-Environmental-Social-and-Governance-Report 
