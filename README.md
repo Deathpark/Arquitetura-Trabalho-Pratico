@@ -52,7 +52,7 @@ Motoristas parceiros e usuários podem utilizar o próprio aplicativo para grava
 ##### U-Acompanha: compartilhamento de viagem
 Tanto motoristas parceiros quanto usuários podem compartilhar a viagem em tempo real com quem desejarem. A ferramenta é acionada por meio da Central de Segurança, identificada por um escudo azul sobre o mapa da viagem no aplicativo.
 
-#### Estrutura do sistema
+### Estrutura do sistema
 
 ![foto2](https://github.com/Deathpark/Arquitetura-Trabalho-Pratico/assets/41022890/4a9a5349-e7a0-4ceb-893e-20740540d514)
 
@@ -104,9 +104,37 @@ São os pontos em comum que as plataformas tem em conjunto:
 - Cadeias de programação reativas;
 - Componentes de plataforma unificados.
 
-O modelo arquitetural inicialmente usado pela Uber era o MVC (Model, View, Controller). Entretanto, para atingir os objetivos supracitados, era necessário uma mudança arquitetural em ambas plataformas. Desta maneira, foi definido que o modelo arquitetural que seria utilizado seria o Riblets, que foi definido após a análise de vários modelos arquiteturais diferentes, onde o VIPER se destacou, e posteriormente virou o Riblets.
+Para atingir a compatibilidade entre plataformas, melhorar os testes e promover uma plataforma unificada, a Uber realizou uma mudança significativa em sua arquitetura, optando pelo modelo Riblet. Esse modelo, agnóstico de plataformas, unifica o desenvolvimento para Android e iOS, promovendo a modularidade, testabilidade e clareza na organização da lógica de negócios e visualização.
+
+A estrutura do Riblet é composta por seis componentes principais:
+Builder: Responsável por instanciar todos os Riblets primários e definir suas dependências. No exemplo do Riblet de seleção de produto, o Builder define a dependência do fluxo de uma cidade.
+Component: Obtém e instancia as dependências de um Riblet, como serviços e fluxos de dados. No exemplo, o Component de seleção de produto obtém e instancia a dependência do fluxo de uma cidade.
+Router: Forma a árvore da aplicação, anexando e desanexando Riblets filhas. Os Routers orientam o ciclo de vida do Interactor e contêm lógica de mudança de estados
+Interactor: Realiza a lógica de negócios, incluindo chamadas de serviço, manipulação de dados e determinação de estados de transição.
+View (Controller): Constrói e atualiza a interface do usuário, tratando interações do usuário, preenchendo componentes da interface com dados e gerenciando animações.
+Presenter: Gerencia a comunicação entre Interactors e Views, traduzindo modelos de negócios em objetos exibíveis para as Views e eventos de interação do usuário para ações nos Interactors.
 
 ![riblets](https://github.com/Deathpark/Arquitetura-Trabalho-Pratico/assets/41022890/60d976be-ede7-46db-a720-e8322b65fd8f)
+
+A estrutura de um Riblet pode incluir um par de Router e Interactor, mas pode ter muitas partes de visualização. Riblets podem ser de visão única, visão múltipla ou sem visão, dependendo se tratam apenas da lógica de negócios, incluem elementos de interface do usuário ou não possuem nenhum deles. Isso permite uma organização flexível da árvore lógica, simplificando as transições de tela e mantendo a modularidade da arquitetura. O Riblet foi projetado para facilitar o desenvolvimento de aplicações escaláveis, promovendo a separação de preocupações e a testabilidade independente de cada componente.
+
+Os Riblets constroem a aplicação Uber ao organizar a lógica de negócios e visualização em unidades modulares e independentes. A construção da aplicação ocorre através da criação de uma árvore de Riblets, cada um com suas responsabilidades específicas. A comunicação e o fluxo de dados dentro de um Riblet são orientados pela lógica de negócios, proporcionando clareza, modularidade e flexibilidade.
+
+O fluxo de dados dentro de um Riblet segue uma direção específica, **indo do serviço para o modelo de fluxo (model stream) e do modelo de fluxo para o Interactor**. Os Interactors são responsáveis por tomar decisões da lógica de negócios, realizar chamadas de serviço e manipular os estados da aplicação. A comunicação entre Riblets ocorre quando um Interactor precisa informar outro Riblet sobre eventos e enviar dados relevantes.
+
+#### Estrutura dentro de um Riblet
+![data_flow](https://github.com/Deathpark/Arquitetura-Trabalho-Pratico/assets/49173787/3944aece-7d57-4287-a965-fc0cc69f80b1)
+
+A **comunicação ascendente** (de um Riblet filho para um Riblet pai) é realizada por meio de interfaces que podem ser implementadas por listeners ou encarregados. Os listeners são frequentemente implementados pelo Interactor do Riblet pai, enquanto os encarregados são usados para comunicações diretas síncronas entre unidades Riblets, como de um Interactor pai para um filho.
+
+A **comunicação descendente** (de um Riblet pai para um Riblet filho) pode ser feita expondo um modelo de fluxo observável. Isso permite que o Riblet pai envie dados para o Riblet filho por meio desse fluxo, facilitando a transmissão de informações de forma eficiente.
+
+#### Comunicação entre os Riblets
+![riblet_comms](https://github.com/Deathpark/Arquitetura-Trabalho-Pratico/assets/49173787/2d6448c0-8cb7-42cc-9c2f-d38ee7b72087)
+
+Ao estruturar o fluxo de dados dessa maneira, os Riblets garantem que os dados corretos cheguem no momento certo para as telas da aplicação. A abordagem baseada na lógica de negócios, em vez da lógica de visualização, ajuda a manter a aplicação isolada e evita complexidades desnecessárias no desenvolvimento, promovendo a escalabilidade e a manutenção do código. Os Riblets não apenas aumentaram a confiabilidade e disponibilidade do aplicativo Uber, mas também estabeleceram uma estrutura que facilita o desenvolvimento futuro, promove a colaboração entre equipes e mantém a facilidade de trabalho ao longo do tempo. Essa arquitetura robusta e flexível posiciona a Uber para evolução contínua e sucesso a longo prazo.
+
+Em conclusão, a análise detalhada da arquitetura do Uber revela uma evolução significativa e estratégica para atender às demandas crescentes de um dos principais aplicativos globais de compartilhamento de viagens. A transição da arquitetura monolítica para a orientada a serviços, com destaque para a adoção dos Riblets, exemplifica o compromisso do Uber em oferecer confiabilidade, disponibilidade e facilidade de desenvolvimento. A modularidade dos Riblets, promovendo uma clara separação de responsabilidades e uma abordagem baseada na lógica de negócios, não apenas fortaleceu a estabilidade operacional, mas também estabeleceu uma base sólida para a inovação contínua. Além disso, a ênfase na segurança, com recursos como U-Check, U-Ajuda e U-Áudio, demonstra o comprometimento da Uber em proporcionar uma experiência segura para motoristas e passageiros. O estudo revela não apenas a complexidade da arquitetura, mas também a adaptabilidade essencial para sustentar o crescimento exponencial do Uber, consolidando sua posição como líder global no setor de transporte compartilhado.
 
 ##### Fontes: 
 - Uber-2023-Environmental-Social-and-Governance-Report 
