@@ -1,3 +1,6 @@
 remote_theme: pages-themes/cayman@v0.2.0
 plugins:
-- jekyll-remote-theme # add this line to the plugins list if you already have one
+- jekyll-remote-theme
+gem "github-pages", group: :jekyll_plugins
+title: [Trabalho Prático de Arquitetura de Software - Analisando Arquiteturas de Sistemas de Software Populares]
+description: [Trabalho realizado para a disciplina Arquitetura de Software na instituição Pontifícia Universidade Católica de Minas Gerais - PUC Minas - 2° Semestre 2023]
