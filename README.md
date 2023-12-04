@@ -106,6 +106,26 @@ São os pontos em comum que as plataformas tem em conjunto:
 
 Para atingir a compatibilidade entre plataformas, melhorar os testes e promover uma plataforma unificada, a Uber realizou uma mudança significativa em sua arquitetura, optando pelo modelo Riblet. Esse modelo, agnóstico de plataformas, unifica o desenvolvimento para Android e iOS, promovendo a modularidade, testabilidade e clareza na organização da lógica de negócios e visualização.
 
+# Antes de falar sobre Riblets, o que é o VIPER?
+
+No site @https://medium.com/jurassic-park-hackers/viper-arquitetura-de-software-e-carros-bee4a85c613f é mostrado uma matéria que decorre sobre o que o VIPER é, quais são seu benefícios e como ele pode ajudar a arquitetura do software a ser mais limpa.
+
+Abaixo, é mostrado as camadas de uma arquitetura limpa:
+![image](https://github.com/Deathpark/Arquitetura-Trabalho-Pratico/assets/41022890/3ab90329-e846-4a9c-8fdc-378cc988e61c)
+
+Já nesta imagem, é mostrado como o estilo arquitetural VIPER utiliza estas camadas:
+![image](https://github.com/Deathpark/Arquitetura-Trabalho-Pratico/assets/41022890/5dce5e02-6903-4136-b8a8-a3419c34f223)
+
+
+VIPER é um acronimo formado pelas seguintes palavras
+- View — Telas
+- Interactor — Regras de negócio à nível de aplicação
+- Presenter — Transformam dados para serem apresentados ou encaminhados para o interactor.
+- Entity — Value objects ou lógicas reaproveitáveis
+- Router — Cuida do fluxo de telas
+
+# Agora sobre os Riblets
+
 A estrutura do Riblet é composta por seis componentes principais:
 Builder: Responsável por instanciar todos os Riblets primários e definir suas dependências. No exemplo do Riblet de seleção de produto, o Builder define a dependência do fluxo de uma cidade.
 Component: Obtém e instancia as dependências de um Riblet, como serviços e fluxos de dados. No exemplo, o Component de seleção de produto obtém e instancia a dependência do fluxo de uma cidade.
@@ -144,4 +164,5 @@ Em conclusão, a análise detalhada da arquitetura do Uber revela uma evolução
 - https://www.geeksforgeeks.org/system-design-of-uber-app-uber-system-architecture/
 - https://medium.com/nerd-for-tech/uber-architecture-and-system-design-e8ac26690dfc
 - https://imasters.com.br/android/engenharia-da-arquitetura-por-tras-do-novo-aplicativo-do-motorista-uber
+- https://medium.com/jurassic-park-hackers/viper-arquitetura-de-software-e-carros-bee4a85c613f
 
